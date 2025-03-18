@@ -47,10 +47,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist-files
+      #- name: Download artifact
+      #  uses: actions/download-artifact@v4
+      #  with:
+      #    name: dist-files
       - name: Output filename
         run: echo "Script file:${{ needs.build.outputs.script-file }}"
       - name: Deploy
