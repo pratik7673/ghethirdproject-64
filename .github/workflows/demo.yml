@@ -22,7 +22,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      script-file: ${{ steps.publish.outputs.script-file }}  # Define the job output correctly
+      script-file: ${{ steps.publish.outputs.killgrave }}  # Define the job output correctly
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
         id: publish  # Add an ID for reference
         run: |
           JS_FILE=$(find dist/assets/*.js -type f | head -n 1)  # Get first matching file
-          echo "script-file=$JS_FILE" >> "$GITHUB_OUTPUT"  # Set output properly
+          echo "killgrave=$JS_FILE" >> "$GITHUB_OUTPUT"  # Set output properly
       - name: test outpost
         run: echo "GITHUB_OUTPUT:$GITHUB_OUTPUT"
       - name: Upload artifact
@@ -52,6 +52,6 @@ jobs:
         with:
           name: dist-files
       - name: Output filename
-        run: echo "Script file:${{ needs.build.outputs.script-file }}"
+        run: echo "Script file:${{ needs.build.outputs.killgrave }}"
       - name: Deploy
         run: echo "Deploying..."
