@@ -1,13 +1,13 @@
 name: Deploy website
+
 on:
   push:
     branches:
       - main
+
 jobs:
   test:
     runs-on: ubuntu-latest
-    outputs:
-     script-file: ${{ steps.publish.outputs.script-file }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -17,9 +17,12 @@ jobs:
         run: npm run lint
       - name: Test code
         run: npm run test
+
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      script-file: ${{ steps.publish.outputs.script-file }}  # Define the job output correctly
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -27,25 +30,26 @@ jobs:
         run: npm ci
       - name: Build website
         run: npm run build
-      - name: publish JS name
-        run: find dist/assets/*.js -type f -execdir echo 'set-outputs name=script-file::{}' ';'
-      - name: upload artifact
+      - name: Publish JS name
+        id: publish  # Add an ID for reference
+        run: |
+          JS_FILE=$(find dist/assets/*.js -type f | head -n 1)  # Get first matching file
+          echo "script-file=$JS_FILE" >> "$GITHUB_OUTPUT"  # Set output properly
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist-files
           path: dist
-        #   path: |
-        #   dist
-        #   package.json
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: download artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: dist-files
-      - name: output filename
-        run: echo "${{ needs.build.outputs.script-file }}"
+      - name: Output filename
+        run: echo "Script file:${{ needs.build.outputs.script-file }}"
       - name: Deploy
         run: echo "Deploying..."
