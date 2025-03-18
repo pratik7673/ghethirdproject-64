@@ -22,7 +22,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      Killgrave: ${{ steps.publish.outputs.Killgrave }}  # ✅ Corrected output name
+      script-file: ${{ steps.publish.outputs.script-file }}  # ✅ Corrected output name
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -34,9 +34,9 @@ jobs:
         id: publish  # ✅ ID needed to reference outputs
         run: |
           JS_FILE=$(find dist/assets/*.js -type f | head -n 1)  # ✅ Gets first JS file
-          echo "Killgrave=$JS_FILE" >> "$GITHUB_OUTPUT"  # ✅ Sets correct output name
+          echo "script-file=$JS_FILE" >> "$GITHUB_OUTPUT"  # ✅ Sets correct output name
       - name: Test output
-        run: echo "Script file:${{ steps.publish.outputs.Killgrave }}"
+        run: echo "Script file:${{ steps.publish.outputs.script-file }}"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -47,11 +47,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      #- name: Download artifact
-      #  uses: actions/download-artifact@v4
-      #  with:
-      #    name: dist-files
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
       - name: Output filename
-        run: echo "Script file:${{ needs.build.outputs.Killgrave }}"
+        run: echo "Script file:${{ needs.build.outputs.script-file }}"  # ✅ Corrected reference
       - name: Deploy
         run: echo "Deploying..."
