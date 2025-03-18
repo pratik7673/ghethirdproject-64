@@ -52,6 +52,6 @@ jobs:
         with:
           name: dist-files
       - name: Output filename
-        run: echo "Script file: ${{ needs.build.outputs.script-file }}"  # ✅ Corrected reference
+        run: echo "Script file:${{ needs.build.outputs.script-file }}"
       - name: Deploy
         run: echo "Deploying..."
