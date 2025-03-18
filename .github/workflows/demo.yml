@@ -36,7 +36,7 @@ jobs:
           JS_FILE=$(find dist/assets/*.js -type f | head -n 1)  # ✅ Gets first JS file
           echo "script-file=$JS_FILE" >> "$GITHUB_OUTPUT"  # ✅ Sets correct output name
       - name: Test output
-        run: echo "Script file: ${{ steps.publish.outputs.script-file }}"
+        run: echo "Script file:${{ steps.publish.outputs.script-file }}"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
